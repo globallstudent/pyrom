@@ -5,7 +5,7 @@ class PyRomApp:
     def __init__(self):
         self.routes = dict()
 
- x   def __call__(self, environ, start_response):
+    def __call__(self, environ, start_response):
         request = Request(environ)
         response = self.handle_request(request)
         return response(environ, start_response)
