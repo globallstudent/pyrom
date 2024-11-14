@@ -1,4 +1,5 @@
 from webob import Request, Response
+from parse import parse
 
 class PyRomApp:
 
@@ -9,22 +10,25 @@ class PyRomApp:
         request = Request(environ)
         response = self.handle_request(request)
         return response(environ, start_response)
-
+    
     def handle_request(self, request):
         response = Response()
 
-        handler = self.find_handler(request)
+        handler, kwargs = self.find_handler(request)
 
         if handler is not None:
-            handler(request, response)
+            handler(request, response, **kwargs)
         else:
             self.default_response(response)
         return response
 
     def find_handler(self, request):
         for path, handler in self.routes.items():
-            if path == request.path:
-                return handler
+            parsed_result = parse(path, request.path)
+            
+            if parsed_result is not None:
+                return handler, parsed_result.named
+        return None, None
 
     def default_response(self, response):
         response.status_code = 404
