@@ -23,7 +23,7 @@ class PyRomApp:
 
         if handler is not None:
             if inspect.isclass(handler):
-                handle = getattr(handler(), request.method.lower(), None)
+                handle   = getattr(handler(), request.method.lower(), None)
 
                 if handler is None:
                     response.status_code = 405
@@ -60,6 +60,6 @@ class PyRomApp:
     
     def test_session(self):
         session = requests.Session()
-        session.mount('http://testserver/', wsgiadapter.WSGIAdapter(self))
+        session.mount('http:///localhost:8000/', wsgiadapter.WSGIAdapter(self))
         return session
 
